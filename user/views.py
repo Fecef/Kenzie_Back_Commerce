@@ -39,13 +39,12 @@ class UserAccounRecoverView(generics.UpdateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
 
+    queryset = User.objects.all()
     serializer_class = UserSerializer
 
     lookup_url_kwarg = "user_id"
 
     def perform_update(self, serializer):
         instance = serializer.save()
-
-        if self.request.data.get("is_active", None):
-            instance.is_active = True
-            instance.save()
+        instance.is_active = True
+        instance.save()
