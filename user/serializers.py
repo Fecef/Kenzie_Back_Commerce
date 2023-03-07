@@ -4,8 +4,6 @@ from datetime import datetime
 
 from .models import User
 
-import ipdb
-
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=127, write_only=True)
