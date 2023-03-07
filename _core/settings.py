@@ -50,7 +50,7 @@ MY_APPS = [
     "user",
     "products",
     "orders",
-    "chart",
+    "cart",
     "address",
 ]
 
