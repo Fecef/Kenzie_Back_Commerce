@@ -11,10 +11,14 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=50)
     is_admin = models.BooleanField(null=True, default=False)
     is_vendor = models.BooleanField(null=True, default=False)
-    is_common = models.BooleanField(null=True, default=True)
     is_active = models.BooleanField(null=True, default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    # address = models.OneToOneField("address.Address", on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ("username",)
 
     def __repr__(self) -> str:
         return f"<[{self.pk}] {self.email}>"
