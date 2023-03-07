@@ -1,20 +1,16 @@
 from rest_framework.pagination import PageNumberPagination
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics
 
 from .models import User
 from .serializers import UserSerializer
-from .permissions import UserPermission, UserDetailPermission
-
-import ipdb
+from .permissions import IsAuthenticated, IsAdmin, IsOwnerOrAdmin
 
 
-class UserView(ListCreateAPIView, PageNumberPagination):
+class UserView(generics.ListCreateAPIView, PageNumberPagination):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [UserPermission]
+    permission_classes = [IsAuthenticated, IsAdmin]
 
-    queryset = User.objects.all()
     serializer_class = UserSerializer
 
     def get_queryset(self):
@@ -25,18 +21,31 @@ class UserView(ListCreateAPIView, PageNumberPagination):
         return queryset
 
 
-class UserDetailView(RetrieveUpdateDestroyAPIView):
-
+class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [UserDetailPermission]
+    permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
     lookup_url_kwarg = "user_id"
 
-    # ! Deleção sem o token de usuário
-    
     def perform_destroy(self, instance: User):
         instance.is_active = False
         instance.save()
+
+
+class UserAccounRecoverView(generics.UpdateAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
+
+    serializer_class = UserSerializer
+
+    lookup_url_kwarg = "user_id"
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+
+        if self.request.data.get("is_active", None):
+            instance.is_active = True
+            instance.save()
