@@ -2,7 +2,6 @@ from django.db import models
 
 
 class Order_Type(models.TextChoices):
-    PR = "Pedido Realizado"
     EA = "Em Andamento"
     EN = "Entregue"
     DEFAULT = "Pedido Realizado"
