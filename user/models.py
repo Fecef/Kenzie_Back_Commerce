@@ -15,8 +15,6 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # address = models.OneToOneField("address.Address", on_delete=models.CASCADE)
-
     class Meta:
         ordering = ("username",)
 
