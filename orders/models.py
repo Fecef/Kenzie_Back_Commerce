@@ -5,7 +5,7 @@ class Order_Type(models.TextChoices):
     PR = "Pedido Realizado"
     EA = "Em Andamento"
     EN = "Entregue"
-    DEFAULT = "Pedido Realizado"
+    DEFAULT = "Pedido realizado"
 
 
 class Order(models.Model):
@@ -19,7 +19,7 @@ class Order(models.Model):
     data_atualizacao = models.DateTimeField(auto_now=True)
 
     user = models.ForeignKey(
-        "users.User",
+        "user.User",
         on_delete=models.CASCADE,
         related_name="orders",
     )
