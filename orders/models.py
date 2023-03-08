@@ -4,7 +4,7 @@ from django.db import models
 class Order_Type(models.TextChoices):
     EA = "Em Andamento"
     EN = "Entregue"
-    DEFAULT = "Pedido Realizado"
+    DEFAULT = "Pedido realizado"
 
 
 class Order(models.Model):
