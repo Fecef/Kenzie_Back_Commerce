@@ -18,7 +18,7 @@ class Order(models.Model):
     data_atualizacao = models.DateTimeField(auto_now=True)
 
     user = models.ForeignKey(
-        "users.User",
+        "user.User",
         on_delete=models.CASCADE,
         related_name="orders",
     )
