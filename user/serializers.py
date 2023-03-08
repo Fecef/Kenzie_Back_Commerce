@@ -5,6 +5,12 @@ from datetime import datetime
 from .models import User
 
 
+class UserTrackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "first_name", "last_name", "email"]
+
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=127, write_only=True)
     created_at = serializers.SerializerMethodField()
