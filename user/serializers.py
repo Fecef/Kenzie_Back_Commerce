@@ -51,12 +51,6 @@ class UserSerializer(serializers.ModelSerializer):
 
         return obj.created_at
 
-    def get_updated_at(self, obj: User):
-        now = datetime.now()
-        obj.updated_at = now.strftime("%Y-%m-%d %H:%M:%S")
-
-        return obj.updated_at
-
     def create(self, validated_data):
         if validated_data.get("is_admin"):
             return User.objects.create_superuser(**validated_data)

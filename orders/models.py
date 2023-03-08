@@ -14,8 +14,8 @@ class Order(models.Model):
     order_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=Order_Type.choices, default=Order_Type.DEFAULT)
     products = models.TextField()
-    data_criacao = models.DateTimeField(auto_now_add=True)
-    data_atualizacao = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     user = models.ForeignKey(
         "user.User",
