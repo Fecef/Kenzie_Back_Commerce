@@ -5,9 +5,6 @@ from datetime import datetime
 from .models import User
 
 
-
-
-
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=127, write_only=True)
     created_at = serializers.SerializerMethodField()

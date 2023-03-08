@@ -35,7 +35,7 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
         instance.save()
 
 
-class UserAccounRecoverView(generics.UpdateAPIView):
+class UserAccountRecoverView(generics.UpdateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
 
