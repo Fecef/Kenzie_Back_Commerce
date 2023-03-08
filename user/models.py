@@ -20,3 +20,5 @@ class User(AbstractUser):
 
     def __repr__(self) -> str:
         return f"<[{self.pk}] {self.email}>"
+
+    # address = models.OneToOneField("address.Address", on_delete=models.CASCADE)

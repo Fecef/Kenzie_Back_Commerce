@@ -36,7 +36,7 @@ class UserDetailView(RetrieveUpdateDestroyAPIView):
     lookup_url_kwarg = "user_id"
 
     # ! Deleção sem o token de usuário
-    
+
     def perform_destroy(self, instance: User):
         instance.is_active = False
         instance.save()
