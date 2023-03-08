@@ -1,15 +1,16 @@
 from rest_framework import serializers
 from .models import Product
-from user.models import User
+
+from user.serializers import UserTrackSerializer
 
 
 class ProductSerializer(serializers.ModelSerializer):
-
+    added_by = UserTrackSerializer(read_only=True)
 
     class Meta:
         model = Product
-        fields = ['name', 'price', 'category', 'currenty_inventory', 'added_by']
+        fields = ["id", "name", "price", "category", "currenty_inventory", "added_by"]
+        depth = 1
 
     def create(self, validated_data: dict) -> Product:
-        print(validated_data)
         return Product.objects.create(**validated_data)
