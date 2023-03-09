@@ -9,7 +9,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ["id", "name", "price", "category", "currenty_inventory", "added_by"]
+        fields = ["id", "name", "price", "category", "current_inventory", "added_by"]
         depth = 1
 
     def create(self, validated_data: dict) -> Product:
