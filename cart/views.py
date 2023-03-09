@@ -15,11 +15,11 @@ class CartView(generics.ListCreateAPIView, PageNumberPagination):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
 
-    # def get_queryset(self):
-    #     return Product.objects.filter(name=self.request.body)
+    def get_queryset(self):
+        return Product.objects.filter(name=self.request.body)
 
-    # def perform_create(self, serializer):
-    #     return serializer.save(name=self.request.body)
+    def perform_create(self, serializer):
+        return serializer.save(name=self.request.body)
 
-    # def perform_create(self, serializer):
-    #     return serializer.save(user=self.request.user)
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
