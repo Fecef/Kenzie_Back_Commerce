@@ -4,5 +4,5 @@ from .models import Product
 
 
 class isVendor(permissions.BasePermission):
-    def has_object_permission(self, request, view: View, obj: Product):
-        return request.user.is_vendor
+    def has_permission(self, request, view: View):
+        return request.user.is_vendor or request.user.is_admin
