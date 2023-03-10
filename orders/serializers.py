@@ -6,6 +6,7 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = '__all__'
+        read_only_fields = ('status', 'order_date', 'user')
 
     def create(self, validated_data: dict) -> Order:
         return Order.objects.create(**validated_data)

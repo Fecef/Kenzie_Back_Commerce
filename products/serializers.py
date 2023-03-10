@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import Product
-
 from user.serializers import UserTrackSerializer
+
+from .models import Product
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -9,7 +9,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ["id", "name", "price", "category", "currenty_inventory", "added_by"]
+        fields = ["id", "name", "price", "category", "current_inventory", "added_by"]
         depth = 1
 
     def create(self, validated_data: dict) -> Product:

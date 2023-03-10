@@ -1,23 +1,18 @@
 from rest_framework.pagination import PageNumberPagination
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import generics
 from .models import User
 from .serializers import UserSerializer
-from .permissions import IsAuthenticated, IsAdmin, IsOwnerOrAdmin
+from .permissions import IsOwnerOrAdmin, IsAdminForGET
 
 
 class UserView(generics.ListCreateAPIView, PageNumberPagination):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAdminForGET]
 
+    queryset = User.objects.filter(is_active=True)
     serializer_class = UserSerializer
-
-    def get_queryset(self):
-        queryset = User.objects.filter(is_active=True)
-
-        self.check_object_permissions(self.request, User)
-
-        return queryset
 
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -36,7 +31,7 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class UserAccountRecoverView(generics.UpdateAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
     queryset = User.objects.all()
     serializer_class = UserSerializer

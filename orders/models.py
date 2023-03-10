@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 
 
 class Order_Type(models.TextChoices):
@@ -11,6 +12,7 @@ class Order(models.Model):
     class Meta:
         ordering = ['id']
 
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     order_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=Order_Type.choices, default=Order_Type.DEFAULT)
     products = models.TextField()

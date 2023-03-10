@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Order
 from .serializers import OrderSerializer
-from .utils import update_stock
+from .utils import update_stock, send_email_user
 
 
 class OrderView(generics.ListCreateAPIView):
@@ -15,10 +15,10 @@ class OrderView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         order = serializer.save(user=self.request.user)
-        product = order.product.all()
-        quantities = [1] * len(product)
-        update_stock(product, quantities)
-        return serializer.save(user=self.request.user)
+        products = order.products.all()
+        quantities = [1] * len(products)
+        update_stock(products, quantities)
+        return order
 
 
 class OrderDetailView(generics.RetrieveUpdateAPIView):
@@ -29,4 +29,7 @@ class OrderDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = OrderSerializer
 
     def perform_update(self, serializer):
-        return serializer.save(vendedor=self.request.user)
+        order = serializer.save()
+        if 'status' in serializer.validated_data:
+            send_email_user(order)
+        return order

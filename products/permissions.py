@@ -3,6 +3,9 @@ from rest_framework.views import View
 from .models import Product
 
 
-class isVendor(permissions.BasePermission):
-    def has_object_permission(self, request, view: View, obj: Product):
-        return request.user.is_vendor
+class isVendorOrAdmin(permissions.BasePermission):
+    def has_permission(self, request, view: View):
+        if request.method == "GET":
+            return True
+
+        return request.user.is_vendor or request.user.is_admin
