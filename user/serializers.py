@@ -2,6 +2,8 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from datetime import datetime
 
+from cart.models import Cart
+
 from .models import User
 
 
@@ -65,6 +67,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         if validated_data.get("is_admin"):
-            return User.objects.create_superuser(**validated_data)
+            user = User.objects.create_superuser(**validated_data)
 
-        return User.objects.create_user(**validated_data)
+        user = User.objects.create_user(**validated_data)
+        Cart.objects.create(user=user)
+        return user
