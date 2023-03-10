@@ -14,3 +14,14 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data: dict) -> Product:
         return Product.objects.create(**validated_data)
+
+
+class ProductCartSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Product
+        fields = ["id", "name", "price", "category"]
+        read_only_fields = ["name", "price", "category"]
+
+    def create(self, validated_data: dict) -> Product:
+        return Product.objects.create(**validated_data)

@@ -19,7 +19,4 @@ class CartView(generics.ListCreateAPIView, PageNumberPagination):
         return Product.objects.filter(name=self.request.body)
 
     def perform_create(self, serializer):
-        return serializer.save(name=self.request.body)
-
-    def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
