@@ -9,6 +9,7 @@ from .permissions import isVendor
 class ProductView(ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [isVendor]
+
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 

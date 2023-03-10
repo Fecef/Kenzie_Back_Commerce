@@ -6,7 +6,7 @@ from .serializers import OrderSerializer
 from .utils import update_stock
 
 
-class OrderList(generics.ListCreateAPIView):
+class OrderView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -21,7 +21,7 @@ class OrderList(generics.ListCreateAPIView):
         return serializer.save(user=self.request.user)
 
 
-class OrderDeatil(generics.RetrieveUpdateAPIView):
+class OrderDetailView(generics.RetrieveUpdateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
