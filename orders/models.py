@@ -15,7 +15,6 @@ class Order(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     order_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=Order_Type.choices, default=Order_Type.DEFAULT)
-    products = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

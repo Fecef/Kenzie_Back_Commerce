@@ -2,8 +2,10 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Order
+from products.models import Product
 from .serializers import OrderSerializer
 from .utils import update_stock, send_email_user
+from rest_framework.exceptions import NotFound
 
 
 class OrderView(generics.ListCreateAPIView):
@@ -12,12 +14,24 @@ class OrderView(generics.ListCreateAPIView):
 
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    order_kwarg = "order_id"
 
     def perform_create(self, serializer):
-        order = serializer.save(user=self.request.user)
-        products = order.products.all()
+        order_id = self.kwargs[self.order_kwarg]
+        user_id = self.request.user
+        products = Product.objects.filter(
+            user_id=order_id
+        )
+
+        if not products:
+            raise NotFound("Nenhum produto encontrado para este usuário.")
+
+        order = serializer.save(user=user_id)
+
         quantities = [1] * len(products)
         update_stock(products, quantities)
+
+        order.products.set(products)
         return order
 
 
