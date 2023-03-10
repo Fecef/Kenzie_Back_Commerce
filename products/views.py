@@ -1,40 +1,43 @@
-from rest_framework.generics import ListCreateAPIViewm, RetrieveUpdateDestroyAPIView, ListAPIView
+from rest_framework import generics
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Product
 from .serializers import ProductSerializer
-from .permissions import isVendor, CustomPermission
+from .permissions import isVendorOrAdmin
 
 
-class ProductView(ListCreateAPIView):
+class ProductView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, isVendor]
+    permission_classes = [IsAuthenticated, isVendorOrAdmin]
 
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
     def perform_create(self, serializer):
         serializer.save(added_by=self.request.user)
 
+    def get_queryset(self):
+        queryset = Product.objects.all()
 
-class OneProductView(RetrieveUpdateDestroyAPIView):
+        id = self.request.query_params.get("id", None)
+        name = self.request.query_params.get("name", None)
+        cat = self.request.query_params.get("category", None)
+
+        if id:
+            queryset = Product.objects.filter(id__icontains=id)
+        if name:
+            queryset = Product.objects.filter(name__icontains=name.replace("-", " "))
+        if cat:
+            queryset = Product.objects.filter(category__icontains=cat.replace("-", " "))
+
+        return queryset
+
+
+class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [CustomPermission]
+    permission_classes = [IsAuthenticated, isVendorOrAdmin]
+
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    lookup_url_kwarg = 'prod_id'
 
-
-class ListProductsView(ListAPIView):
-    serializer_class = ProductSerializer
-
-    def get_queryset(self):
-        varURL = self.kwargs['varURL']
-        if varURL is not None:
-            queryset_name = Product.objects.filter(name__icontains=varURL)
-            if queryset_name:
-                return queryset_name
-            queryset_category = Product.objects.filter(category__icontains=varURL)
-            if queryset_category:
-                return queryset_category
+    lookup_url_kwarg = "prod_id"

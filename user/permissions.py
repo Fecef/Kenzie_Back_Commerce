@@ -4,14 +4,12 @@ from rest_framework.views import View
 from .models import User
 
 
-class IsAdmin(permissions.BasePermission):
-    def has_object_permission(self, request, view: View, obj: User):
-        return request.user.is_admin
+class IsAdminForGET(permissions.BasePermission):
+    def has_permission(self, request, view: View):
+        if request.method == "POST":
+            return True
 
-
-class IsAuthenticated(permissions.BasePermission):
-    def has_object_permission(self, request, view: View, obj: User):
-        return request.user.is_authenticated
+        return request.user.is_authenticated and request.user.is_admin
 
 
 class IsOwnerOrAdmin(permissions.BasePermission):
