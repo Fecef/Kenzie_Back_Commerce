@@ -15,8 +15,8 @@ class ProductSerializer(serializers.ModelSerializer):
             "price",
             "category",
             "current_inventory",
-            "added_by",
             "is_avaliable",
+            "added_by",
         ]
         read_only_fields = ["is_avaliable"]
         depth = 1
