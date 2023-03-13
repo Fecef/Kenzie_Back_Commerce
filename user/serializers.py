@@ -32,6 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
             "is_active",
             "created_at",
             "updated_at",
+            "address",
         ]
 
         extra_kwargs = {
@@ -52,6 +53,8 @@ class UserSerializer(serializers.ModelSerializer):
                 ]
             },
         }
+        read_only_fields = ["address"]
+        depth = 1
 
     def get_created_at(self, obj: User):
         now = datetime.now()
