@@ -12,8 +12,10 @@ class CartView(generics.ListCreateAPIView, PageNumberPagination):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-    queryset = Cart.objects.all()
     serializer_class = CartSerializer
+
+    def get_queryset(self):
+        return Cart.objects.filter(user=self.request.user.id)
 
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
