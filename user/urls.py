@@ -1,8 +1,10 @@
 from django.urls import path
 from rest_framework_simplejwt import views as jwt_views
+
 from address.views import AddressView, AddressUpdateView
 from cart.views import CartView, CartDetailView
 from orders.views import OrderView, OrderDetailView
+
 from .views import UserView, UserDetailView, UserAccountRecoverView
 
 urlpatterns = [

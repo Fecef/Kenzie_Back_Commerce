@@ -1,6 +1,7 @@
 from rest_framework import generics, serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from .models import Order
 from .serializers import OrderSerializer
 from .utils import update_stock, send_email_user
@@ -18,6 +19,7 @@ class OrderView(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
 
     def perform_create(self, serializer):
+
         cart = self.request.user.cart
         products = cart.products.filter(is_avaliable=True)
 
@@ -29,7 +31,7 @@ class OrderView(generics.ListCreateAPIView):
         cart.products.set([])
 
         return order
-
+        
     def get_queryset(self):
 
         queryset = super().get_queryset()
@@ -40,12 +42,12 @@ class OrderView(generics.ListCreateAPIView):
         return queryset
 
 
-class OrderDetailView(generics.RetrieveUpdateAPIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+# class OrderDetailView(generics.RetrieveUpdateAPIView):
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAuthenticated]
 
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
+#     queryset = Order.objects.all()
+#     serializer_class = OrderSerializer
 
     def get_object(self):
         obj = get_object_or_404(User, pk=self.request.user.orders.id)
