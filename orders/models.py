@@ -19,5 +19,7 @@ class Order(models.Model):
         "user.User", on_delete=models.CASCADE, related_name="orders"
     )
 
+    products = models.ManyToManyField("products.Product", related_name="orders")
+
     def __repr__(self) -> str:
         return f"{self.user.username} - {self.order_date.strftime('%d/%m/%Y %H:%M:%S')} - {self.status}"
