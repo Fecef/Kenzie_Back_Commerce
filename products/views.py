@@ -41,3 +41,12 @@ class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProductSerializer
 
     lookup_url_kwarg = "prod_id"
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        current_inventory = self.request.data.pop("current_inventory")
+
+        if current_inventory == 0:
+            instance.is_avaliable = False
+
+        instance.save()
