@@ -10,7 +10,7 @@ class CartProducts(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ["id", "name", "price", "category", "is_avaliable"]
+        fields = ["id", "added_by", "name", "price", "category", "is_avaliable"]
         read_only_fields = fields
 
     def create(self, validated_data: dict) -> Product:

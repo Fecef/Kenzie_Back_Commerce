@@ -22,4 +22,4 @@ class Order(models.Model):
     products = models.ManyToManyField("products.Product", related_name="orders")
 
     def __repr__(self) -> str:
-        return f"{self.user.username} - {self.order_date.strftime('%d/%m/%Y %H:%M:%S')} - {self.status}"
+        return f"{self.user.username} - {self.status}"
