@@ -13,7 +13,6 @@ class Order(models.Model):
         ordering = ['id']
 
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
-    order_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=Order_Type.choices, default=Order_Type.DEFAULT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -21,6 +20,11 @@ class Order(models.Model):
     user = models.ForeignKey(
         "user.User",
         on_delete=models.CASCADE,
+        related_name="orders",
+    )
+
+    products = models.ManyToManyField(
+        "products.Product",
         related_name="orders",
     )
 
