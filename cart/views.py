@@ -4,13 +4,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from django.shortcuts import get_object_or_404
 
-from cart.models import Cart
-from cart.serializers import CartSerializer
+from .models import Cart
+from .serializers import CartSerializer
+from .permissions import IsCommonOrAdmin
 
 
 class CartView(generics.ListCreateAPIView, PageNumberPagination):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsCommonOrAdmin]
 
     serializer_class = CartSerializer
 
@@ -23,7 +24,7 @@ class CartView(generics.ListCreateAPIView, PageNumberPagination):
 
 class CartDetailView(generics.DestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsCommonOrAdmin]
 
     serializer_class = CartSerializer
 
