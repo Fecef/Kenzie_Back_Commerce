@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt import views as jwt_views
 from address.views import AddressView, AddressUpdateView
-from cart.views import CartView
+from cart.views import CartView, CartDetailView
 
 from .views import UserView, UserDetailView, UserAccountRecoverView
 
@@ -13,4 +13,5 @@ urlpatterns = [
     path("user/address/update/", AddressUpdateView.as_view()),
     path("user/<str:user_id>/", UserDetailView.as_view()),
     path("user/<str:user_id>/recover_account/", UserAccountRecoverView.as_view()),
+    path("user/cart/<str:prod_id>/", CartDetailView.as_view()),
 ]

@@ -30,9 +30,9 @@ class UserSerializer(serializers.ModelSerializer):
             "is_admin",
             "is_vendor",
             "is_active",
+            "address",
             "created_at",
             "updated_at",
-            "address",
         ]
 
         extra_kwargs = {
@@ -71,7 +71,9 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         if validated_data.get("is_admin"):
             user = User.objects.create_superuser(**validated_data)
+        else:
+            user = User.objects.create_user(**validated_data)
 
-        user = User.objects.create_user(**validated_data)
         Cart.objects.create(user=user)
+
         return user

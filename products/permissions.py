@@ -1,6 +1,5 @@
 from rest_framework import permissions
 from rest_framework.views import View
-from .models import Product
 
 
 class isVendorOrAdmin(permissions.BasePermission):

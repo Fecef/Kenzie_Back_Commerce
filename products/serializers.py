@@ -28,12 +28,12 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductCartSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField()
+
     class Meta:
         model = Product
         fields = ["id", "name", "price", "category"]
         read_only_fields = ["name", "price", "category"]
-
-    id = serializers.UUIDField()
 
     def create(self, validated_data: dict) -> Product:
         return Product.objects.create(**validated_data)

@@ -5,6 +5,9 @@ from django.db import models
 
 
 class User(AbstractUser):
+    class Meta:
+        ordering = ("username",)
+
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     email = models.EmailField(max_length=127, unique=True)
     first_name = models.CharField(max_length=50)
@@ -14,9 +17,6 @@ class User(AbstractUser):
     is_active = models.BooleanField(null=True, default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ("username",)
 
     def __repr__(self) -> str:
         return f"<[{self.pk}] {self.email}>"

@@ -10,7 +10,7 @@ class AddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Address
-        fields = ["id", "state", "city", "zip_code", "street", "number", "user"]
+        fields = ["state", "city", "zip_code", "street", "number", "user"]
         depth = 1
 
     def create(self, validated_data):
