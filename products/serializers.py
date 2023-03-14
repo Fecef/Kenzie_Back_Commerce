@@ -1,11 +1,18 @@
 from rest_framework import serializers
-from user.serializers import UserTrackSerializer
+
+from user.models import User
 
 from .models import Product
 
 
+class ProductUser(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "first_name", "last_name", "email"]
+
+
 class ProductSerializer(serializers.ModelSerializer):
-    added_by = UserTrackSerializer(read_only=True)
+    added_by = ProductUser(read_only=True)
 
     class Meta:
         model = Product

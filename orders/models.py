@@ -11,7 +11,7 @@ class Order_Type(models.TextChoices):
 
 class Order(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
-    status = models.CharField(max_length=20, choices=Order_Type.choices)
+    status = models.CharField(max_length=20, choices=Order_Type.choices, default=Order_Type.PR)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

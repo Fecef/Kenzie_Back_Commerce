@@ -14,7 +14,7 @@ urlpatterns = [
     path("user/address/", AddressView.as_view()),
     path("user/address/update/", AddressUpdateView.as_view()),
     path("user/order/", OrderView.as_view()),
-    path("user/order/mail/", OrderDetailView.as_view()),
+    path("user/order/<str:order_id>/mail/", OrderDetailView.as_view()),
     path("user/<str:user_id>/", UserDetailView.as_view()),
     path("user/<str:user_id>/recover_account/", UserAccountRecoverView.as_view()),
     path("user/cart/<str:prod_id>/", CartDetailView.as_view()),
