@@ -1,15 +1,14 @@
-from rest_framework import generics
+from rest_framework import generics, serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.exceptions import NotFound
-from django.shortcuts import get_list_or_404
-
-from products.models import Product
 
 from .models import Order
 from .serializers import OrderSerializer
 from .utils import update_stock, send_email_user
-from .exceptions import OutOfStock
+from rest_framework.exceptions import NotFound
+from .permissions import IsVendor
+from django.shortcuts import get_object_or_404
+from user.models import User
 
 
 class OrderView(generics.ListCreateAPIView):
@@ -18,23 +17,29 @@ class OrderView(generics.ListCreateAPIView):
 
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    order_kwarg = "order_id"
 
     def perform_create(self, serializer):
-        products = self.request.user.cart.products
-        has_unavaliable = get_list_or_404(products, is_avaliable=False)
 
-        if has_unavaliable:
-            # ! Customizar
-            raise OutOfStock("Product is unavaliable.")
+        cart = self.request.user.cart
+        products = cart.products.filter(is_avaliable=True)
 
-        # order = serializer.save(user=user_id)
+        if not products.exists():
+            raise serializers.ValidationError('Out of stock')
 
-        # quantities = [1] * len(products)
-        # update_stock(products, quantities)
+        order = serializer.save(user=self.request.user)
+        order.products.set(products)
+        cart.products.set([])
 
-        # order.products.set(products)
-        # return order
+        return order
+        
+    def get_queryset(self):
+
+        queryset = super().get_queryset()
+
+        if not self.request.user.is_vendor:
+            queryset = queryset.filter(user=self.request.user)
+
+        return queryset
 
 
 # class OrderDetailView(generics.RetrieveUpdateAPIView):
@@ -44,8 +49,12 @@ class OrderView(generics.ListCreateAPIView):
 #     queryset = Order.objects.all()
 #     serializer_class = OrderSerializer
 
-#     def perform_update(self, serializer):
-#         order = serializer.save()
-#         if "status" in serializer.validated_data:
-#             send_email_user(order)
-#         return order
+    def get_object(self):
+        obj = get_object_or_404(User, pk=self.request.user.orders.id)
+        return obj.orders
+
+    def perform_update(self, serializer):
+        order = serializer.save()
+        if 'status' in serializer.validated_data:
+            send_email_user(order)
+        return order
