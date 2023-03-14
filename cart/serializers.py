@@ -6,6 +6,8 @@ from .models import Cart
 
 
 class CartProducts(serializers.ModelSerializer):
+    id = serializers.UUIDField()
+
     class Meta:
         model = Product
         fields = ["id", "name", "price", "category", "is_avaliable"]
