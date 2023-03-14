@@ -23,6 +23,10 @@ class OrderView(generics.ListCreateAPIView):
         cart = self.request.user.cart
         products = cart.products.filter(is_avaliable=True)
 
+        for product in products:
+            product.current_inventory -= 1
+            product.save()
+
         if not products.exists():
             raise serializers.ValidationError("Out of stock")
 
@@ -49,12 +53,12 @@ class OrderDetailView(generics.RetrieveUpdateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
-    def get_object(self):
-        obj = get_object_or_404(User, pk=self.request.user.orders.id)
-        return obj.orders
+    lookup_url_kwarg = "order_id"
 
     def perform_update(self, serializer):
         order = serializer.save()
+
         if "status" in serializer.validated_data:
             send_email_user(order)
+
         return order

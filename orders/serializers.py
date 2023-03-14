@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.shortcuts import get_object_or_404
 
 from products.models import Product
 from user.models import User
@@ -25,7 +26,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ["status", "user", "products"]
+        fields = ["id", "status", "created_at", "user", "products"]
         read_only_fields = ["status", "user", "products"]
         depth = 1
 
