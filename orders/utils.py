@@ -9,14 +9,16 @@ def update_stock(products, quantities):
         quantidade = quantities[item]
         product_obj = Order.objects.get(id=product.id)
         if product_obj.stock < quantidade:
-            raise ValueError(f'O produto {product_obj.name} está indisponível.')
+            raise ValueError(f"O produto {product_obj.name} está indisponível.")
+
         product_obj.stock -= quantidade
         product_obj.save()
 
 
 def send_email_user(order):
-    subject = 'Order updated'
-    message = f'Your order with ID {order.id} has been updated. New status: {order.status}'
+    subject = "Order updated"
+    message = f"Your order {order.id} has been updated. New status: {order.status}"
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [order.user.email]
+
     send_mail(subject, message, email_from, recipient_list, fail_silently=False)
