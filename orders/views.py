@@ -13,22 +13,36 @@ class OrderView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsVendor]
 
-    queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user.id)
+
     def perform_create(self, serializer):
+        import ipdb
+
         cart = self.request.user.cart
         products = cart.products.filter(is_avaliable=True)
 
-        for product in products:
-            product.current_inventory -= 1
-            product.save()
-
         if not products.exists():
+            # TODO Enviando mensagem errada quando não ha item no carrinho.
+            # TODO Precisa personalizar mensagem.
             raise OutOfStock("Out of stock")
+
+        for product in products:
+            # TODO Tornar a quantidade de itens dinâmica.
+            product.current_inventory -= 1
+
+            # ! Trabalhar aqui.
+            # vendor = product.added_by
+
+            # instance = Order.objects.create(user=vendor)
+
+            product.save()
 
         order = serializer.save(user=self.request.user)
         order.products.set(products)
+
         cart.products.set([])
 
         return order
