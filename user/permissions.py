@@ -1,11 +1,11 @@
 from rest_framework import permissions
-from rest_framework.views import View
+from rest_framework.views import View, Request
 
 from .models import User
 
 
 class IsAdminForGET(permissions.BasePermission):
-    def has_permission(self, request, view: View):
+    def has_permission(self, request: Request, view: View):
         if request.method == "POST":
             return True
 
