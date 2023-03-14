@@ -6,6 +6,7 @@ from products.models import Product
 from .serializers import OrderSerializer
 from .utils import update_stock, send_email_user
 from rest_framework.exceptions import NotFound
+import ipdb
 
 
 class OrderView(generics.ListCreateAPIView):
@@ -14,13 +15,12 @@ class OrderView(generics.ListCreateAPIView):
 
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    order_kwarg = "order_id"
 
     def perform_create(self, serializer):
         order_id = self.kwargs
         user_id = self.request.user
         products = Product.objects.filter(
-            user_id=order_id
+            added_by__products__id=order_id
         )
 
         if not products:
