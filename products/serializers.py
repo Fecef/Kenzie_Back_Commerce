@@ -25,15 +25,3 @@ class ProductSerializer(serializers.ModelSerializer):
         if validated_data["current_inventory"] == 0:
             return Product.objects.create(**validated_data, is_avaliable=False)
         return Product.objects.create(**validated_data)
-
-
-class ProductCartSerializer(serializers.ModelSerializer):
-    id = serializers.UUIDField()
-
-    class Meta:
-        model = Product
-        fields = ["id", "name", "price", "category"]
-        read_only_fields = ["name", "price", "category"]
-
-    def create(self, validated_data: dict) -> Product:
-        return Product.objects.create(**validated_data)
