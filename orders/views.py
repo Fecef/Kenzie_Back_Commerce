@@ -24,14 +24,14 @@ class OrderView(generics.ListCreateAPIView):
         products = cart.products.filter(is_avaliable=True)
 
         if not products.exists():
-            raise serializers.ValidationError('Out of stock')
+            raise serializers.ValidationError("Out of stock")
 
         order = serializer.save(user=self.request.user)
         order.products.set(products)
         cart.products.set([])
 
         return order
-        
+
     def get_queryset(self):
 
         queryset = super().get_queryset()
@@ -42,12 +42,12 @@ class OrderView(generics.ListCreateAPIView):
         return queryset
 
 
-# class OrderDetailView(generics.RetrieveUpdateAPIView):
-#     authentication_classes = [JWTAuthentication]
-#     permission_classes = [IsAuthenticated]
+class OrderDetailView(generics.RetrieveUpdateAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
-#     queryset = Order.objects.all()
-#     serializer_class = OrderSerializer
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
 
     def get_object(self):
         obj = get_object_or_404(User, pk=self.request.user.orders.id)
@@ -55,6 +55,6 @@ class OrderView(generics.ListCreateAPIView):
 
     def perform_update(self, serializer):
         order = serializer.save()
-        if 'status' in serializer.validated_data:
+        if "status" in serializer.validated_data:
             send_email_user(order)
         return order
