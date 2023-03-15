@@ -19,4 +19,4 @@ class Product(models.Model):
     )
 
     def __repr__(self) -> str:
-        return f"<[{self.pk}] {self.name} | is_avaliable = {self.is_avaliable}>"
+        return f"<[{self.pk}] {self.name} | is_avaliable={self.is_avaliable}>"
