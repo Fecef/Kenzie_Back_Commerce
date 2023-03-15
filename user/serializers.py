@@ -2,13 +2,9 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from datetime import datetime
 
+from cart.models import Cart
+
 from .models import User
-
-
-class UserTrackSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["id", "first_name", "last_name", "email"]
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -28,6 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
             "is_admin",
             "is_vendor",
             "is_active",
+            "address",
             "created_at",
             "updated_at",
         ]
@@ -50,6 +47,8 @@ class UserSerializer(serializers.ModelSerializer):
                 ]
             },
         }
+        read_only_fields = ["address"]
+        depth = 1
 
     def get_created_at(self, obj: User):
         now = datetime.now()
@@ -65,6 +64,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         if validated_data.get("is_admin"):
-            return User.objects.create_superuser(**validated_data)
+            user = User.objects.create_superuser(**validated_data)
+        else:
+            user = User.objects.create_user(**validated_data)
 
-        return User.objects.create_user(**validated_data)
+        Cart.objects.create(user=user)
+
+        return user

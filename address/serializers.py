@@ -1,16 +1,22 @@
 from rest_framework import serializers
 
-from user.serializers import UserTrackSerializer
+from user.models import User
 
 from .models import Address
 
 
+class AddressUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "first_name", "last_name", "email"]
+
+
 class AddressSerializer(serializers.ModelSerializer):
-    user = UserTrackSerializer(read_only=True)
+    user = AddressUserSerializer(read_only=True)
 
     class Meta:
         model = Address
-        fields = ["id", "state", "city", "zip_code", "street", "number", "user"]
+        fields = ["state", "city", "zip_code", "street", "number", "user"]
         depth = 1
 
     def create(self, validated_data):
