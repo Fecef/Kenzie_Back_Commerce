@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from .permissions import IsVendor
+from .permissions import IsVendorOrPost, IsVendor
 from .models import Order
 from .serializers import OrderSerializer
 from .utils import send_email_user
@@ -11,7 +11,7 @@ from .exceptions import OutOfStock
 
 class OrderView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsVendor]
+    permission_classes = [IsAuthenticated, IsVendorOrPost]
 
     serializer_class = OrderSerializer
 
@@ -68,3 +68,13 @@ class OrderDetailView(generics.RetrieveUpdateAPIView):
             send_email_user(order)
 
         return order
+
+
+class OrderCompleteView(generics.ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsVendor]
+
+    serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        return Order.objects.filter(status="Entregue", user=self.request.user.id)
